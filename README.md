@@ -27,7 +27,7 @@ The goals / steps of this project are the following:
 [image8]: ./examples/ColorWarp.png "Color Warp"
 [image9]: ./examples/FindLines.png "Find Lines"
 [image10]: ./examples/FindLines2.png "Find Lines Using Previous Frame"
-[image11]: ./examples/Collage.png "Final Output"
+[image11]: ./examples/Collage.jpg "Final Output"
 [image12]: ./examples/Curve.png "Curve"
 [image13]: ./examples/Radius.png "Radius"
 [video1]: ./project_video_output.mp4 "Video"
@@ -162,7 +162,14 @@ Here is an example of my result for all test images:
 I have created a single pipeline for processing both image and video. It has optional parameters to display diagnostics using text and picture-in-picture.
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./project_video_output.mp4)
+
+ [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/uYHrckWvquI/0.jpg)](https://www.youtube.com/watch?v=uYHrckWvquI)
+ 
+ ---
+ Here's a [link to my challenge video result](./challenge_video_output.mp4)
+ 
+ [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/i489vF7b6Vo/0.jpg)](https://youtu.be/i489vF7b6Vo)
 
 ---
 
