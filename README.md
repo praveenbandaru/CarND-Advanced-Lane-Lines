@@ -28,6 +28,8 @@ The goals / steps of this project are the following:
 [image9]: ./examples/FindLines.png "Find Lines"
 [image10]: ./examples/FindLines2.png "Find Lines Using Previous Frame"
 [image11]: ./examples/Collage.png "Final Output"
+[image12]: ./examples/Curve.png "Curve"
+[image13]: ./examples/Radius.png "Radius"
 [video1]: ./project_video_output.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -119,25 +121,45 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The two functions `find_lane_pixels()` and `search_around_poly()` performs all the necessary tasks to find and fit a polynomial to the lane lines in an image.
 
+The first one  `find_lane_pixels()` can be found in the 19th code cell of the IPython notebook under the * **Find lane pixels using sliding windows method*** sub-section of '***Detect lane pixels and fit to find the lane boundary.***'
+
+It takes a histogram of the bottom half of the image and tries to find the peak of the left and right halves of the histogram. These will be the starting points for the left and right lines. Then it uses nine windows of equal sizes for each lane, which can fit vertically in the image when they are placed on top of each other. These windows have fixed width to identify lane pixels and through iteration they are placed on top of each other (starting from bottom) such that each one is centered around the midpoint of the pixels from the window below. This effectively follows the lane lines up to the top of the image, and speeds up processing by searching only for activated pixels over a small portion of the image. Pixels belonging to each lane line are calculated and the Numpy library's polyfit() method is used to fit a second order polynomial to each set of pixels. Below is the example image which shows the above process as well the yellow colored representation of the calculated fit:
 ![alt text][image9]
+
+The second one  `search_around_poly()` can be found in the 21st code cell of the IPython notebook under the * **Find lane pixels using margin from previous frame*** sub-section of '***Detect lane pixels and fit to find the lane boundary.***'
+
+Repeatedly trying to find the lane pixels through sliding windows method for every single frame can be very non-effective while processing a video.
+Instead of calculating the activated pixels in each window iteratively, this makes use of some pre-defined margin around the pixels found from a previous frame. Then it makes a highly targeted search in that area to determine the new lane pixels. This effectively speeds up processing by searching only for activated pixels over a predefined area. Pixels belonging to each lane line are identified and the Numpy polyfit() method is used to fit a second order polynomial to each set of pixels. Below is the example image which shows the above process as well the yellow colored representation of the calculated fit:
 ![alt text][image10]
+
+Whenever the second method `search_around_poly()` doesn't yield any results we can always fallback to the first method `find_lane_pixels()` and repeat the process.
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+Once we located the lane line pixels and used their x and y pixel positions to fit a second order polynomial curve which is as follows: 
+![alt text][image12]
+The radius of curvature can be calculated by using the below formula:
+![alt text][image13]
+This can be found in the 25th code cell of the IPython notebook under the * **Determine the curvature of the lane and vehicle position with respect to center.*** 
+
+The position of the vehicle with respect to center can be obtained by calculating the difference between lane center and the image center, assuming that the camera was mounted at the center point of the car's windshield.
+This can be found in the 26th code cell of the IPython notebook under the * **Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.*** 
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+The pipeline I've created is responsible for performing all the above steps as well as outputting the calculations back on the images in a visual manner. 
+I've implemented this step in the function `pipeline()` which can be found in the 29th code cell of the IPython notebook under the * **Create Final Image Pipeline*** .  
+
+Here is an example of my result for all test images:
 
 ![alt text][image11]
 
 ---
 
 ### Pipeline (video)
-
+I have created a single pipeline for processing both image and video. It has optional parameters to display diagnostics using text and picture-in-picture.
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
 Here's a [link to my video result](./project_video.mp4)
@@ -148,4 +170,8 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Many of the methods I used were taken straight from the classroom. They were pretty useful and helped me to understand the different approaches I have took while completing this project. One problem I faced was miscalculations due to RGB/BGR conversions while using `cv2.imread` in my pipeline until I found that the frames from video files in my pipeline were RGB.
+
+Although my pipeline performed better on the project video, it fails to detect the lane lines under challenging conditions like changes in road color, poor road details, glare and shadows etc. To improve the algorithm may be we need to create different models for different road conditions and apply the appropriate model after determining the type of road image.
+
+I found this project to be quite challenging and while the basic calculations for many color thresholdings which I've learned in the classroom worked well on the project video , they failed miserably on the challenge videos. Later I've started implementing multiple combinations after spending some time in research and was able to get good results atleast on the project video and the challenge video. My approach failed terribly on the harder challenge video and I couldn't succeed to learn to setup a robust model to identify lanes under challenging conditions. I wish to learn more advanced techniques and optimize this pipeline to make it robust in coming future.
