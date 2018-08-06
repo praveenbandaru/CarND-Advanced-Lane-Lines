@@ -159,7 +159,7 @@ Here is an example of my result for all test images:
 ---
 
 ### Pipeline (video)
-I have created a single pipeline for processing both image and video. It has optional parameters to display diagnostics using text and picture-in-picture.
+I have created a single pipeline for processing both image and video. It has optional parameters to display diagnostics using text and picture-in-picture. I have made use of the Line class to store each line pixel data between the frames individually. Also implemented a weighted mean of the position of the lines to avoid jitter in the output video.
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
 Here's a [link to my video result](./project_video_output.mp4)
